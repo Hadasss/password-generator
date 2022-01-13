@@ -1,18 +1,22 @@
-var generateBtn = document.querySelector("#generate");
+var generateBtn = document.querySelector("#generate"); // button
+var passwordText = document.querySelector("#password"); // textarea text value
 var upperCaseStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var lowerCaseStr = "abcdefghijklmnopqrstuvwxyz";
 var numStr = "1234567890";
 var specialCaseStr = '!"#$%&()*+,-.;:<>=?@[]_^`{}~|';
-var userChoice = [];
+var userChoice = "";
+var passLength = "";
+var passLengthNum = "";
+var passwordArr = [];
 
 // prompt to get user input for password length
 var passwordLength = function () {
-  var passLength = prompt(
+  passLength = prompt(
     "How long would you like your password to be?\nChoose between 8-128 characters."
   );
 
   if (passLength >= 8 && passLength <= 128) {
-    return passLength;
+    passLengthNum = parseInt(passLength);
   } else {
     alert("Choose a number between 8-128!");
     passwordLength();
@@ -21,69 +25,55 @@ var passwordLength = function () {
 
 // prompt to get user input to select caharacter types + variable to hold the value for reuse.
 var userInput = function () {
-  var choicePrompt = prompt(
-    "Choose type of charecters you want in your password:\n1 for uppercase\n2 for lowercase\n3 for numeric\n4 for special charecters\n5 for ALL"
-  );
-  userChoice = choicePrompt;
+  var lowerCaseChoice = confirm("Would you like to use lowercase?");
+  if (lowerCaseChoice) userChoice += lowerCaseStr;
+
+  var upperCaseChoice = confirm("Would you like to use uppercase?");
+  if (upperCaseChoice) userChoice += upperCaseStr;
+
+  var numericChoice = confirm("Would you like to use numbers?");
+  if (numericChoice) userChoice += numStr;
+
+  var specialChoice = confirm("Would you like to use special characters?");
+  if (specialChoice) userChoice += specialCaseStr;
 };
 
-// function to get user input for selected character types from prompt
-var charType = function () {
-  userInput();
-
-  // BUG - scope issue: userChoice out of scope!! //
-  if (userChoice == 1) {
-    console.log(userChoice);
-    return (userChoice += userChoice);
-  } else if (userChoice == 2) {
-    console.log("user picked 2");
-  } else if (userChoice == 3) {
-    console.log("user picked 3");
-  } else if (userChoice == 4) {
-    console.log("user picked 4");
-  } else if (userChoice == 5) {
-    console.log("user picked 5");
-  } else {
-    alert("Please choose a valid option");
-    userInput();
-  }
-};
-
-// function to generate random characters from a each character type string. the function will receive parameters for number of characters and type of caracter
-var generateRandomChar = function () {
-  // generate random char from each type
-
-  if (userChoice.includes(2)) {
-    var resultLower =
-      upperCaseStr[Math.floor(Math.random() * upperCaseStr.length)];
-  }
-};
-
-// function to trigger all other functions and combine the generating of character types. this function will take arguments: password length and type of characters.
-var generatePassword = function () {
+// convert userChoice string to array and from it generate random character, for the length of passLength. then covert back to string.
+var randomArr = function () {
+  debugger;
+  // BUG need to reset for another button click
   var password = "";
 
-  passwordLength();
+  //   var userChoiceArr = [];
+  //   userChoiceArr = userChoice.split("");
+  //   console.log(userChoiceArr);
 
-  charType();
-
-  // generator code here
-
-  // take password length, devide by number of types selected (result: var charPerTypeNum).
-  // check if result includes() 1 2 3 4 or 5
-  // generate random characters based on number of characters from each type (var charPerTypeNum)
-  // if odd number - add 1 lowercase.
-
+  // BUG - generates numbers only and in pairs!
+  for (var i = 0; i < passLengthNum; i++) {
+    var randomChar = [Math.floor(Math.random() * userChoice.length)];
+    password += randomChar;
+  }
+  console.log(password);
   return password;
 };
 
+// function to trigger all other functions and combine the generating of character types.
+var generatePassword = function () {
+  passwordLength();
+
+  userInput();
+
+  randomArr();
+};
+
 function writePassword() {
-  // Write password to the #password input
-  // concatenate all generated characters to one string value
+  alert("Please choose the characteristics for your password");
   // display in textarea
-  var passwordText = document.querySelector("#password"); // textarea text value
-  passwordText.value = generatePassword(); // to displays generated password in textarea
+  generatePassword(); // to displays generated password in textarea
+
+  passwordText.value = password;
+  console.log(password);
+  //   passwordText = password;
 }
 
-// Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
