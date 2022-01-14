@@ -38,6 +38,7 @@ var userInput = function () {
   if (specialChoice) userChoice += specialCaseStr;
 
   console.log(userChoice);
+  return userChoice;
 };
 
 var randomArr = function () {
